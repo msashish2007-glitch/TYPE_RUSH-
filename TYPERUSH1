@@ -1,1 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Typerush</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto+Mono:wght@400;700&family=Bebas+Neue&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <!-- AddThis Sharing Buttons -->
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-672b8f3e5c9d1a2f" async></script>
+  <style>
+    :root {
+      --primary: #00ffff;
+      --accent: #ff6b6b;
+      --bg: #0a0a1a;
+      --card-bg: rgba(15, 25, 50, 0.88);
+      --text: #e0e1dd;
+      --glow: 0 0 30px rgba(0, 255, 255, 0.9);
+      --glow-red: 0 0 30px rgba(255, 107, 107, 0.9);
+      --matrix: #00ff41;
+      --gold: #ffd700;
+      --electric: #00f0ff;
+      --terminal: #0f0;
+      --code-bg: #111;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      background: var(--bg);
+      color: var(--text);
+      min-height:100vh;
+      font-family: 'Roboto Mono', monospace;
+      overflow-x:hidden;
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.03) 2px, rgba(0,255,255,0.03) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,107,107,0.03) 2px, rgba(255,107,107,0.03) 4px);
+    }
+    body::before {
+      content:'';
+      position:absolute;
+      top:0; left:0; right:0; bottom:0;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(0,255,255,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255,107,107,0.15) 0%, transparent 50%);
+      pointer-events:none;
+      z-index:-1;
+      animation: pulseBg 8s infinite alternate;
+    }
+    @keyframes pulseBg {
+      0% { opacity:0.7; }
+      100% { opacity:1; }
+    }
+    header{
+      text-align:center;
+      padding:2.5rem 1rem;
+      position:relative;
+      z-index:2;
+    }
+    h1{
+      font-family: 'Bebas Neue', sans-serif;
+      font-size:5rem;
+      background: linear-gradient(90deg, #00ffff, #ff6b6b, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: var(--glow);
+      animation: neonPulse 1.5s infinite;
+      margin-bottom:.3rem;
+      letter-spacing:0.1em;
+    }
+    @keyframes neonPulse {
+      0%,100% { text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff; }
+      50% { text-shadow: 0 0 30px #ff6b6b, 0 0 60px #ff6b6b, 0 0 80px #ffd700; }
+    }
+    header p{
+      font-size:1.2rem;
+      opacity:0.95;
+      text-shadow: 0 0 15px rgba(0,255,255,0.5);
+      animation: fadeInUp 1s ease-out 0.5s both;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    @keyframes fadeInUp {
+      from{ opacity:0; transform:translateY(20px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+
+    .tabs{
+      display:flex;
+      justify-content:center;
+      gap:1.2rem;
+      margin:2.5rem 0;
+      flex-wrap:wrap;
+      padding:0 1rem;
+      position:relative;
+      z-index:2;
+    }
+    .tab{
+      background: var(--card-bg);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(0,255,255,0.4);
+      padding:1rem 2.5rem;
+      border-radius:60px;
+      cursor:pointer;
+      transition:all .4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      font-weight:700;
+      font-size:1.1rem;
+      position:relative;
+      overflow:hidden;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      letter-spacing:0.05em;
+      text-transform:uppercase;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .tab::before{
+      content:'';
+      position:absolute;
+      top:0; left:-100%;
+      width:100%; height:100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition:0.6s;
+    }
+    .tab:hover::before{ left:100%; }
+    .tab:hover{
+      background: linear-gradient(135deg, rgba(0,255,255,0.2), rgba(255,107,107,0.2));
+      box-shadow: var(--glow), 0 8px 25px rgba(0,0,0,0.5);
+      transform:translateY(-5px) scale(1.05);
+      border-color:var(--primary);
+    }
+    .tab.active{
+      background: var(--primary);
+      color: #000;
+      box-shadow: var(--glow), 0 0 40px rgba(0,255,255,0.6);
+      transform:translateY(-5px) scale(1.05);
+      border-color:var(--electric);
+      font-weight:900;
+    }
+
+    .game-box{
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(0,255,255,0.3);
+      border-radius:2rem;
+      padding:3rem;
+      max-width:720px;
+      width:100%;
+      margin:1.5rem auto;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.6), var(--glow);
+      text-align:center;
+      display:none;
+      animation: fadeInScale 0.6s ease-out;
+      position:relative;
+      overflow:hidden;
+    }
+    .game-box::before {
+      content:'';
+      position:absolute;
+      top:-50%; left:-50%;
+      width:200%; height:200%;
+      background: radial-gradient(circle, rgba(0,255,255,0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+      pointer-events:none;
+      opacity:0.3;
+    }
+    @keyframes rotate { to { transform:rotate(360deg); } }
+    @keyframes fadeInScale {
+      from{ opacity:0; transform:scale(0.95) translateY(30px); }
+      to{ opacity:1; transform:scale(1) translateY(0); }
+    }
+    .game-box.active{display:block}
+    .game-box h2{
+      font-family: 'Orbitron', sans-serif;
+      font-size:2.8rem;
+      margin-bottom:.8rem;
+      color: var(--primary);
+      text-shadow: var(--glow);
+      animation: titleGlow 2s infinite alternate;
+    }
+    @keyframes titleGlow {
+      from{ text-shadow:0 0 15px var(--primary); }
+      to{ text-shadow:0 0 35px var(--primary), 0 0 50px var(--accent); }
+    }
+
+    button{
+      background: linear-gradient(135deg, var(--accent), #ff5252);
+      color:#fff;
+      border:none;
+      padding:1rem 2.8rem;
+      margin:1.2rem .6rem;
+      font-size:1.2rem;
+      border-radius:60px;
+      cursor:pointer;
+      transition:all .4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      font-weight:700;
+      box-shadow: 0 6px 20px rgba(255,107,107,0.5);
+      position:relative;
+      overflow:hidden;
+      text-transform:uppercase;
+      letter-spacing:0.05em;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    button::before{
+      content:'';
+      position:absolute;
+      top:50%; left:50%;
+      width:0; height:0;
+      background: rgba(255,255,255,0.4);
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      transition:width .4s, height .4s;
+    }
+    button:hover::before{
+      width:400px; height:400px;
+    }
+    button:hover{
+      background: linear-gradient(135deg, #ff5252, #ff1744);
+      transform:translateY(-5px) scale(1.05);
+      box-shadow: var(--glow-red), 0 10px 30px rgba(255,107,107,0.6);
+    }
+    button:active{ transform:translateY(-2px) scale(1.02); }
+
+    /* SCANLINE */
+    .scanline {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(to bottom, transparent, rgba(0,255,255,0.3));
+      animation: scan 4s linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes scan {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+
+    /* DIGITAL CONTENT ENHANCEMENTS */
+
+    /* TYPERUSH DIGITAL */
+    .char-box{
+      width:300px; height:160px;
+      margin:40px auto;
+      background:linear-gradient(135deg, #0a0a1a, #1a1a2e);
+      border:6px solid var(--primary);
+      border-radius:28px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      font-size:3.5rem;
+      font-weight:bold;
+      color:var(--terminal);
+      position:relative;
+      overflow:hidden;
+      box-shadow: 
+        0 0 30px rgba(0,255,255,0.8),
+        inset 0 0 40px rgba(0,0,0,0.7);
+      animation: floatDigital 3s infinite ease-in-out;
+      letter-spacing:0.1em;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    @keyframes floatDigital {
+      0%,100%{ transform:translateY(0) rotateX(0); }
+      50%{ transform:translateY(-15px) rotateX(8deg); }
+    }
+    .char-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(45deg, transparent 30%, rgba(0,255,255,0.05) 50%, transparent 70%);
+      animation: scanlineInner 2s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes scanlineInner {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .timer-ring{
+      position:absolute; top:-10px; left:-10px;
+      width:320px; height:180px;
+      border:7px solid #ff4d4d;
+      border-radius:32px;
+      border-left-color:transparent;
+      animation: spinDigital 1s linear infinite;
+      box-shadow: 0 0 25px #ff4d4d, 0 0 40px rgba(255,77,77,0.5);
+    }
+    @keyframes spinDigital { to { transform: rotate(360deg); } }
+    #rush-target {
+      text-shadow: 0 0 20px var(--terminal);
+      animation: pulseTarget 1.5s infinite;
+    }
+    @keyframes pulseTarget {
+      0%,100% { text-shadow: 0 0 20px var(--terminal); }
+      50% { text-shadow: 0 0 40px var(--terminal), 0 0 60px #00ff88; }
+    }
+
+    /* INPUT DIGITAL */
+    input[type="text"], textarea {
+      background: var(--code-bg);
+      color: var(--terminal);
+      border: 3px solid var(--primary);
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      font-size: 1.4rem;
+      outline: none;
+      transition: all .3s;
+      box-shadow: 0 0 20px rgba(0,255,255,0.4);
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.05em;
+      text-transform: none;
+    }
+    input[type="text"]:focus, textarea:focus {
+      border-color: var(--electric);
+      box-shadow: var(--glow), 0 0 30px rgba(0,240,255,0.6);
+      background: #0a1a2e;
+    }
+
+    /* STATS DIGITAL */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1.2rem;
+      margin: 2rem 0;
+    }
+    .stat {
+      background: rgba(10,10,26,0.8);
+      padding: 1.2rem;
+      border-radius: 16px;
+      border: 2px solid rgba(0,255,255,0.3);
+      box-shadow: 0 0 15px rgba(0,255,255,0.2);
+      font-family: 'Orbitron', sans-serif;
+    }
+    .stat > div:first-child {
+      font-size: 0.9rem;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .stat span {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--gold);
+      text-shadow: 0 0 15px var(--gold);
+    }
+
+    /* SPEED TEST DIGITAL */
+    #speedtest .sample {
+      background: var(--code-bg);
+      padding: 1.8rem;
+      border-radius: 1.5rem;
+      margin: 2rem 0;
+      font-size: 1.5rem;
+      line-height: 2;
+      text-align: left;
+      user-select: none;
+      border: 3px solid rgba(0,255,255,.4);
+      box-shadow: inset 0 0 30px rgba(0,0,0,.7), 0 0 25px rgba(0,255,255,.3);
+      position: relative;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+    }
+    #speedtest .sample::before {
+      content: '>_';
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1.2rem;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%,100% { opacity:1; }
+      50% { opacity:0; }
+    }
+    #speedtest .char { 
+      display: inline-block;
+      transition: .15s;
+      font-weight: 600;
+    }
+    #speedtest .ok { 
+      color: #4ade80;
+      text-shadow: 0 0 15px #4ade80;
+      background: rgba(74,222,128,0.1);
+      border-radius: 2px;
+    }
+    #speedtest .no { 
+      color: #ef4444;
+      text-decoration: underline wavy;
+      text-shadow: 0 0 15px #ef4444;
+      background: rgba(239,68,68,0.1);
+      border-radius: 2px;
+    }
+    #speedtest .cur { 
+      background: linear-gradient(90deg, #fbbf24, #ffd700);
+      color: #000;
+      border-radius: 4px;
+      padding: 0 4px;
+      animation: pulseCursor 1s infinite;
+      font-weight: bold;
+    }
+    @keyframes pulseCursor {
+      0%,100% { box-shadow: 0 0 8px #ffd700; }
+      50% { box-shadow: 0 0 20px #ffd700, 0 0 30px #ff6b6b; }
+    }
+
+    /* TIMER DIGITAL */
+    .timer {
+      font-size: 3rem;
+      font-weight: bold;
+      margin: 1.5rem 0;
+      color: var(--gold);
+      text-shadow: 0 0 20px var(--gold);
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 0.1em;
+    }
+
+    /* BLINDFOLD DIGITAL */
+    #blind-word {
+      font-size: 3.5rem;
+      margin: 2.5rem 0;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: .15em;
+      text-shadow: 0 0 25px var(--gold);
+      animation: glowWord 2s infinite alternate;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    @keyframes glowWord {
+      from { text-shadow: 0 0 25px var(--gold); }
+      to { text-shadow: 0 0 50px var(--gold), 0 0 70px #ff6b6b; }
+    }
+
+    /* MEMORY DIGITAL */
+    .word-display {
+      font-size: 4.5rem;
+      font-weight: bold;
+      color: var(--terminal);
+      min-height: 140px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 30px 0;
+      text-shadow: var(--glow), 0 0 40px var(--terminal);
+      animation: memGlow 2s infinite alternate;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.1em;
+    }
+    @keyframes memGlow {
+      from { text-shadow: var(--glow), 0 0 40px var(--terminal); }
+      to { text-shadow: var(--glow), 0 0 60px var(--terminal), 0 0 80px #00ffff; }
+    }
+
+    /* SHARE BUTTONS */
+    .share-buttons {
+      margin: 2rem auto;
+      max-width: 720px;
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      padding: 1.2rem;
+      background: rgba(15,25,50,0.6);
+      border-radius: 2rem;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0,255,255,0.3);
+      box-shadow: 0 0 20px rgba(0,255,255,0.2);
+    }
+
+    footer{
+      text-align:center;
+      margin-top:auto;
+      padding:2.5rem 1rem;
+      font-size:1rem;
+      opacity:.8;
+      color: var(--primary);
+      text-shadow: 0 0 15px rgba(0,255,255,0.4);
+      position:relative;
+      z-index:2;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    @media(max-width:480px){
+      h1{font-size:3.2rem}
+      .game-box{padding:2rem}
+      .char-box{width:240px;height:130px;font-size:2.5rem}
+      #speedtest .sample{font-size:1.2rem}
+      .tab{padding:.8rem 1.8rem;font-size:1rem}
+      .word-display{font-size:3rem}
+      #blind-word{font-size:2.5rem}
+    }
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <div class="scanline"></div>
+  <header>
+    <h1 class="glitch" data-text="TYPERUSH">TYPERUSH</h1>
+    <p>Digital Arena • Speed • Memory • Precision</p>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-game="typerush">Typerush</div>
+    <div class="tab" data-game="blindfold">Blindfold</div>
+    <div class="tab" data-game="memory">Memory</div>
+    <div class="tab" data-game="speedtest">Speed Test</div>
+  </div>
+
+  <!-- TYPERUSH -->
+  <div id="typerush" class="game-box active">
+    <h2>Typerush</h2>
+    <p class="subtitle">Words + symbols + numbers → Bonus: any letter!</p>
+    <div class="char-box">
+      <div class="timer-ring" id="rush-ring"></div>
+      <div id="rush-target">?</div>
+    </div>
+    <div class="bonus" id="rush-bonus"></div>
+    <input type="text" id="rush-inp" autocomplete="off" placeholder="Type here..." />
+    <div class="stats">
+      <div class="stat">Score: <span id="rush-score">0</span></div>
+      <div class="stat">Time: <span id="rush-timer">10</span>s</div>
+    </div>
+    <button id="rush-start">Start</button>
+    <div id="rush-over" class="game-over hidden">
+      <p>Game Over! Final Score: <span id="rush-final">0</span></p>
+      <div class="mistake" id="rush-mistake">
+        <div><span class="label">Correct:</span> <span class="correct" id="rush-correct"></span></div>
+        <div><span class="label">You typed:</span> <span class="wrong" id="rush-wrong"></span></div>
+      </div>
+      <button id="rush-restart">Play Again</button>
+    </div>
+  </div>
+
+  <!-- BLINDFOLD TYPING -->
+  <div id="blindfold" class="game-box">
+    <h2>Blindfold Typing</h2>
+    <p>Words will be <strong>spoken</strong>. Type without seeing. <strong>Press Enter</strong> when correct!</p>
+    <div id="blind-start">
+      <button id="blind-start-btn">Start Challenge</button>
+    </div>
+    <div id="blind-game" class="hidden">
+      <div class="prog"><div id="blind-bar" class="bar"></div></div>
+      <div id="blind-word" class="word"></div>
+      <input id="blind-inp" autocomplete="off" spellcheck="false" placeholder="type here…">
+      <div id="blind-fb" class="fb"></div>
+      <div class="hint hidden" id="blind-hint">Press <kbd>Enter</kbd> to continue</div>
+      <button id="blind-next" class="hidden">Next Word</button>
+    </div>
+    <div id="blind-result" class="hidden">
+      <h3>Done!</h3>
+      <p>Correct: <span id="blind-cnt">0</span>/10</p>
+      <p>Accuracy: <span id="blind-acc">0</span>%</p>
+      <p>Avg time: <span id="blind-avg">0</span>s</p>
+      <button id="blind-again">Play Again</button>
+    </div>
+  </div>
+
+  <!-- MEMORY TYPER -->
+  <div id="memory" class="game-box">
+    <h2>Memory Typer</h2>
+    <p class="subtitle">Memorize in <strong>0.4s</strong> — No repeats!</p>
+    <div class="word-display" id="mem-display">Get Ready...</div>
+    <input type="text" id="mem-inp" autocomplete="off" placeholder="Type here after word disappears..." disabled />
+    <div class="stats">
+      <div class="stat">Score: <span id="mem-score">0</span></div>
+      <div class="stat">Level: <span id="mem-level">1</span></div>
+      <div class="stat">Length: <span id="mem-length">3</span></div>
+    </div>
+    <button id="mem-start">Start Game</button>
+    <div id="mem-over" class="game-over hidden">
+      <p>Game Over! Final Score: <span id="mem-final">0</span></p>
+      <button id="mem-restart">Play Again</button>
+    </div>
+  </div>
+
+  <!-- SPEED TEST -->
+  <div id="speedtest" class="game-box">
+    <h2>Speed Test</h2>
+    <div id="st-start">
+      <div class="time-btns">
+        <button class="time-btn" data-time="30">30s</button>
+        <button class="time-btn active" data-time="60">60s</button>
+        <button class="time-btn" data-time="120">120s</button>
+      </div>
+      <button id="st-go">Start</button>
+    </div>
+    <div id="st-test" class="hidden">
+      <div class="timer" id="st-time">60</div>
+      <div class="sample" id="st-text"></div>
+      <textarea id="st-input" placeholder="Type here..." autocomplete="off" spellcheck="false"></textarea>
+      <button id="st-restart">Restart</button>
+    </div>
+    <div id="st-result" class="hidden">
+      <h3>Done!</h3>
+      <div class="stats">
+        <div class="stat"><div>WPM</div><div class="val" id="st-wpm">0</div></div>
+        <div class="stat"><div>CPM</div><div class="val" id="st-cpm">0</div></div>
+        <div class="stat"><div>Acc</div><div class="val" id="st-acc">0%</div></div>
+        <div class="stat"><div>Err</div><div class="val" id="st-err">0</div></div>
+      </div>
+      <button id="st-again">Again</button>
+    </div>
+  </div>
+
+  <!-- SHARE BUTTONS -->
+  <div class="share-buttons">
+    <div class="addthis_inline_share_toolbox"></div>
+  </div>
+
+  <footer>
+    <p>© 2025 TYPERUSH — Cyber Typing Arena</p>
+  </footer>
+
+  <script>
+    // ====== COMMON UTILS ======
+    const $ = s => document.querySelector(s);
+    const $$ = s => document.querySelectorAll(s);
+
+    // Tab switching
+    $$('.tab').forEach(tab => {
+      tab.onclick = () => {
+        $$('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        $$('.game-box').forEach(g => g.classList.remove('active'));
+        $(`#${tab.dataset.game}`).classList.add('active');
+      };
+    });
+
+    // ====== TYPERUSH ======
+    const RUSH_BASE = ['quiz','jazz','vex','foxy','zany','jinx','quip','zest','hawk','jack','flux','buzz','cozy','gaze','hazy','jive','maze','quay','vibe','waxy','yoga','zinc','apex','lynx','onyx','quix','zomb','fjord','gypsy','klutz','whizz','xylem','zephyr','jumbo','vixen','quartz','jovial','zombie','vortex','jigsaw','quokka','xeric','zodiac','jujube','vanguard','kale','xenon'];
+    const EXTRAS = '0123456789!@#$%^&*()-_+=[{]}|\\;:\'",.<>/?'.split('');
+    const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+    let rTarget='', rLast='', rBonus=false, rScore=0, rBaseTime=10, rLeft=rBaseTime, rTimer=null, rPlaying=false, rUsed=new Set();
+
+    const rTargetEl = $('#rush-target');
+    const rInp = $('#rush-inp');
+    const rBonusMsg = $('#rush-bonus');
+    const rScoreEl = $('#rush-score');
+    const rTimerEl = $('#rush-timer');
+    const rRing = $('#rush-ring');
+    const rStartBtn = $('#rush-start');
+    const rOver = $('#rush-over');
+    const rFinal = $('#rush-final');
+    const rRestart = $('#rush-restart');
+    const rCorr = $('#rush-correct');
+    const rWrong = $('#rush-wrong');
+
+    function genNormal() {
+      let combo;
+      do {
+        const w = RUSH_BASE[Math.floor(Math.random()*RUSH_BASE.length)];
+        const e = EXTRAS[Math.floor(Math.random()*EXTRAS.length)];
+        const pos = Math.random()<0.5?'before':'after';
+        combo = pos==='before'?e+w:w+e;
+      } while (rUsed.has(combo));
+      rUsed.add(combo);
+      return combo;
+    }
+    function pickBonus() { return LETTERS[Math.floor(Math.random()*LETTERS.length)]; }
+
+    function showRush() {
+      rBonus = (rScore>0 && rScore%3===0);
+      if (rBonus) { 
+        rTarget=pickBonus(); 
+        rBonusMsg.textContent="BONUS LETTER!"; 
+        rInp.style.width="200px"; 
+        rInp.maxLength=1; 
+        rInp.placeholder="Type the letter..."; 
+      }
+      else { 
+        rTarget=genNormal(); 
+        rBonusMsg.textContent=""; 
+        rInp.style.width=""; 
+        rInp.maxLength=rTarget.length; 
+        rInp.placeholder="Type the combo..."; 
+      }
+      rTargetEl.textContent = rTarget.toUpperCase(); 
+      rInp.value=''; 
+      rInp.focus();
+    }
+    function startRushTimer() {
+      clearInterval(rTimer);
+      rLeft = Math.max(2, rBaseTime - Math.floor(rScore/10)*2);
+      rTimerEl.textContent = rLeft;
+      rRing.style.animationDuration = rLeft+'s';
+      rTimer = setInterval(()=>{ 
+        rLeft--; 
+        rTimerEl.textContent=rLeft; 
+        if(rLeft<=0) rEnd("Time's up!"); 
+      },1000);
+    }
+    function nextRush() {
+      rScore++; 
+      rScoreEl.textContent=rScore;
+      if(rScore%10===0) rBaseTime=Math.max(2,rBaseTime-2);
+      showRush(); 
+      startRushTimer();
+    }
+    function rEnd(reason="Wrong input!") {
+      rPlaying=false; 
+      clearInterval(rTimer); 
+      rInp.disabled=true;
+      rLast = rInp.value.trim()||"(nothing)";
+      rFinal.textContent=rScore; 
+      rCorr.textContent=rTarget.toUpperCase(); 
+      rWrong.textContent=rLast;
+      rOver.classList.remove('hidden'); 
+      rTargetEl.textContent='Failed'; 
+      rBonusMsg.textContent="";
+    }
+    rInp.addEventListener('input',()=>{
+      if(!rPlaying) return;
+      const t = rInp.value.trim();
+      if(t.toLowerCase()===rTarget.toLowerCase()) nextRush();
+      else if(rBonus && t.length===1) rEnd();
+      else if(!rBonus && !rTarget.toLowerCase().startsWith(t.toLowerCase())) rEnd();
+    });
+    rInp.addEventListener('keydown',e=>{
+      const max = rBonus?1:rTarget.length;
+      if(rInp.value.length>=max && !['Backspace','Delete'].includes(e.key)) e.preventDefault();
+    });
+    function startRushGame() {
+      rScore=0; rBaseTime=10; rPlaying=true; rUsed.clear(); rScoreEl.textContent=0;
+      rOver.classList.add('hidden'); rInp.disabled=false; rInp.focus();
+      showRush(); startRushTimer();
+    }
+    rStartBtn.onclick = startRushGame;
+    rRestart.onclick = startRushGame;
+
+    // ====== BLINDFOLD TYPING ======
+    const BLIND_WORDS = ["apple","banana","cherry","dragon","elephant","forest","grape","honey","island","jungle",
+                         "kiwi","lemon","mango","ocean","planet","quiet","river","sunset","tiger","umbrella"];
+    let bIdx=0, bCorrect=0, bStartTm, bTimes=[];
+
+    const bStartScreen = $('#blind-start');
+    const bGame = $('#blind-game');
+    const bResult = $('#blind-result');
+    const bWord = $('#blind-word');
+    const bInp = $('#blind-inp');
+    const bFb = $('#blind-fb');
+    const bNext = $('#blind-next');
+    const bHint = $('#blind-hint');
+    const bBar = $('#blind-bar');
+
+    function speak(text) {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US'; u.rate = 0.9;
+      speechSynthesis.speak(u);
+    }
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    function initAudio() { if (!audioCtx) audioCtx = new AudioContext(); return audioCtx; }
+    function playSound(freq, dur=0.2, type='sine', vol=0.3) {
+      const ctx = initAudio();
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = freq; o.type = type;
+      g.gain.setValueAtTime(vol, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + dur);
+      o.start(); o.stop(ctx.currentTime + dur);
+    }
+    function playCorrect() {
+      playSound(523.25,0.15); setTimeout(()=>playSound(659.25,0.15),50); setTimeout(()=>playSound(783.99,0.2),100);
+    }
+    function playIncorrect() {
+      playSound(200,0.1,'sawtooth',0.5); setTimeout(()=>playSound(180,0.1,'sawtooth',0.5),80);
+    }
+
+    $('#blind-start-btn').onclick = () => { bStartScreen.classList.add('hidden'); bGame.classList.remove('hidden'); bReset(); bNextWord(); };
+    $('#blind-next').onclick = () => { bInp.disabled=false; bNextWord(); };
+    $('#blind-again').onclick = () => { bResult.classList.add('hidden'); bStartScreen.classList.remove('hidden'); };
+
+    function bReset() { bIdx=0; bCorrect=0; bTimes=[]; bBar.style.width='0%'; }
+    function bNextWord() {
+      if (++bIdx > 10) { bEnd(); return; }
+      bBar.style.width = ((bIdx-1)*10)+'%';
+      const w = BLIND_WORDS[Math.floor(Math.random()*BLIND_WORDS.length)];
+      bWord.textContent = w; speak(w);
+      bInp.value=''; bFb.textContent=''; bFb.className='fb';
+      bNext.classList.add('hidden'); bHint.classList.add('hidden');
+      bInp.disabled=false; setTimeout(()=>bInp.focus(),100);
+      bStartTm = performance.now();
+    }
+    let bIsCorrect = false;
+    bInp.oninput = () => {
+      const typed = bInp.value.trim().toLowerCase();
+      const goal = bWord.textContent.toLowerCase();
+      if (typed===goal) {
+        if (!bIsCorrect) {
+          const t = (performance.now()-bStartTm)/1000;
+          bTimes.push(t); bCorrect++;
+          bFb.textContent='Correct!'; bFb.className='fb ok';
+          playCorrect(); bNext.classList.remove('hidden'); bHint.classList.remove('hidden');
+          bIsCorrect=true;
+        }
+      } else if (!goal.startsWith(typed)) {
+        bFb.textContent='Incorrect – keep typing'; bFb.className='fb no';
+        playIncorrect(); bIsCorrect=false; bHint.classList.add('hidden');
+      } else { bFb.textContent=''; bIsCorrect=false; bHint.classList.add('hidden'); }
+    };
+    bInp.onkeydown = e => { if (e.key==='Enter' && bIsCorrect) { e.preventDefault(); bNext.click(); }};
+    bInp.onpaste = bInp.oncopy = bInp.oncut = e => e.preventDefault();
+
+    function bEnd() {
+      speechSynthesis.cancel();
+      bGame.classList.add('hidden'); bResult.classList.remove('hidden');
+      const acc = Math.round(bCorrect*10);
+      const avg = bTimes.length ? (bTimes.reduce((a,b)=>a+b,0)/bTimes.length).toFixed(2) : 0;
+      $('#blind-cnt').textContent = bCorrect;
+      $('#blind-acc').textContent = acc;
+      $('#blind-avg').textContent = avg;
+    }
+
+    // ====== MEMORY TYPER ======
+    const MEM_WORDS = {
+      3:['cat','dog','sun','bat','jam','pen','cup','fan','ice','egg'],
+      4:['book','tree','fish','bird','star','cake','door','lamp','ball','ship'],
+      5:['apple','house','water','light','cloud','table','chair','plant','music','river'],
+      6:['puzzle','rocket','tiger','castle','planet','guitar','bridge','forest','candle','mirror'],
+      7:['elephant','computer','mountain','umbrella','butterfly','keyboard','notebook','treasure','chocolate','pineapple'],
+      8:['airplane','hospital','calendar','dinosaur','volcano','internet','squirrel','rainbow','television','waterfall'],
+      9:['beautiful','adventure','knowledge','education','discovery','wonderful','fantastic','brilliant','excellent','amazing'],
+      10:['technology','innovation','creativity','impossible','friendship','happiness','incredible','unbelievable','extraordinary','phenomenal']
+    };
+    let mWord='', mScore=0, mLevel=1, mLen=3, mActive=false, mTimer=null, mInputOk=false;
+    let mPool=[], mUsed=new Set();
+
+    const mDisp = $('#mem-display');
+    const mInp = $('#mem-inp');
+    const mScoreEl = $('#mem-score');
+    const mLevelEl = $('#mem-level');
+    const mLenEl = $('#mem-length');
+    const mStartBtn = $('#mem-start');
+    const mOver = $('#mem-over');
+    const mFinal = $('#mem-final');
+    const mRestart = $('#mem-restart');
+
+    function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+    function initPool(len){ const list=[...MEM_WORDS[len]]; shuffle(list); mPool=list; }
+    function getWord(){ if(mPool.length===0) initPool(mLen); return mPool.shift(); }
+    function showMem() {
+      if(!mActive) return;
+      mWord=getWord(); mUsed.add(mWord);
+      mDisp.textContent=mWord.toUpperCase(); mDisp.classList.remove('flash');
+      mInp.value=''; mInp.disabled=true; mInputOk=false;
+      mTimer=setTimeout(()=>{
+        mDisp.textContent='???'; mInp.disabled=false; mInp.focus(); mInputOk=true;
+      },400);
+    }
+    function checkMem() {
+      if(!mInputOk || !mActive) return;
+      const typed = mInp.value.trim().toLowerCase();
+      const correct = mWord.toLowerCase();
+      if(typed===correct){
+        mScore++; mScoreEl.textContent=mScore;
+        if(mScore%7===0){
+          mLen=Math.min(mLen+1,10); mLenEl.textContent=mLen;
+          mLevel=Math.floor(mScore/7)+1; mLevelEl.textContent=mLevel;
+          initPool(mLen);
+        }
+        mDisp.textContent='Correct!'; mDisp.classList.add('flash');
+        setTimeout(showMem,800);
+      } else mEnd();
+    }
+    function mEnd(){
+      mActive=false; clearTimeout(mTimer); mInp.disabled=true;
+      mFinal.textContent=mScore; mOver.classList.remove('hidden'); mDisp.textContent='Failed';
+    }
+    function startMem(){
+      mScore=0; mLevel=1; mLen=3; mActive=true; mUsed.clear();
+      mScoreEl.textContent=0; mLevelEl.textContent=1; mLenEl.textContent=3;
+      mOver.classList.add('hidden'); mInp.disabled=true; mInp.value='';
+      initPool(mLen); mDisp.textContent='Get Ready...';
+      setTimeout(showMem,1500);
+    }
+    mInp.addEventListener('input',()=>{ if(mInputOk && mInp.value.trim().length>=mWord.length) checkMem(); });
+    mInp.addEventListener('keydown',e=>{ if(e.key==='Enter' && mInputOk) checkMem(); });
+    mStartBtn.onclick = startMem;
+    mRestart.onclick = startMem;
+
+    // ====== SPEED TEST ======
+    const ST_TEXTS = [
+      "The quick brown fox jumps over the lazy dog.",
+      "Technology drives innovation and progress daily.",
+      "Practice improves speed and accuracy over time.",
+      "Focus is key to mastering any skill quickly.",
+      "Artificial intelligence transforms modern computing.",
+      "Climate change demands immediate global action now.",
+      "Reading books expands knowledge and imagination fast.",
+      "Exercise boosts health and mental clarity daily."
+    ];
+    let stLimit = 60, stLeft = stLimit, stTimer, stStartTm, stIdx = 0, stCorrect = 0, stTotal = 0;
+    let stSample = "";
+
+    const stStart = $('#st-start'), stTest = $('#st-test'), stResult = $('#st-result');
+    const stTextEl = $('#st-text'), stInput = $('#st-input'), stTimeEl = $('#st-time');
+
+    // Time buttons
+    $$('#speedtest .time-btn').forEach(b => {
+      b.onclick = () => {
+        $$('#speedtest .time-btn').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        stLimit = +b.dataset.time;
+      };
+    });
+
+    $('#st-go').onclick = () => { stStart.classList.add('hidden'); stTest.classList.remove('hidden'); stBegin(); };
+    $('#st-restart').onclick = () => location.reload();
+    $('#st-again').onclick = () => location.reload();
+
+    function stBegin() {
+      stSample = ST_TEXTS[Math.floor(Math.random() * ST_TEXTS.length)];
+      stRender();
+      stInput.value = ''; stInput.focus();
+      stLeft = stLimit; stTimeEl.textContent = stLeft;
+    }
+
+    stInput.oninput = () => {
+      if (!stStartTm) { stStartTm = Date.now(); stRunTimer(); }
+      const val = stInput.value;
+      stTotal = val.length; stIdx = stTotal;
+      stRender();
+      if (stIdx >= stSample.length) stEnd();
+    };
+
+    function stRunTimer() {
+      stTimer = setInterval(() => {
+        stLeft--; stTimeEl.textContent = stLeft;
+        if (stLeft <= 0) stEnd();
+      }, 1000);
+    }
+
+    function stRender() {
+      const typed = stInput.value;
+      stTextEl.innerHTML = "";
+      stCorrect = 0;
+      for (let i = 0; i < stSample.length; i++) {
+        const s = document.createElement('span');
+        s.className = 'char';
+        s.textContent = stSample[i].toUpperCase();
+        if (i < typed.length) {
+          if (typed[i].toLowerCase() === stSample[i].toLowerCase()) { s.className += ' ok'; stCorrect++; }
+          else s.className += ' no';
+        } else if (i === typed.length) s.className += ' cur';
+        stTextEl.appendChild(s);
+      }
+    }
+
+    function stEnd() {
+      clearInterval(stTimer);
+      stInput.disabled = true;
+      const mins = (stLimit - stLeft) / 60 || 0.0167;
+      const wpm = Math.round((stCorrect / 5) / mins);
+      const cpm = Math.round(stCorrect / mins);
+      const acc = stTotal ? Math.round((stCorrect / stTotal) * 100) : 0;
+      $('#st-wpm').textContent = wpm;
+      $('#st-cpm').textContent = cpm;
+      $('#st-acc').textContent = acc + '%';
+      $('#st-err').textContent = stTotal - stCorrect;
+      stTest.classList.add('hidden');
+      stResult.classList.remove('hidden');
+    }
+
+    // Focus first input on load
+    window.onload = () => { $('#rush-inp').focus(); };
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
